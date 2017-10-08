@@ -13,6 +13,11 @@ class GameScene: SKScene {
     var tracksArray: [SKSpriteNode]? = [SKSpriteNode]()
     var player: SKSpriteNode?
     
+    var currentTrack = 0
+    var movingToTrack = false
+    
+    // init this first so it is laoded early
+    var moveSound = SKAction.playSoundFileNamed("Sounds/move.wav", waitForCompletion: false)
     
     // MARK: lifecycle
     // like view did load in UIKit
@@ -31,7 +36,7 @@ class GameScene: SKScene {
             
             // check the name of what we touched
             if node?.name == "right" {
-                print("move right")
+                moveToNextTrack()
             } else if node?.name == "up" {
                 moveVertically(up: true)
             } else if node?.name == "down" {
@@ -41,11 +46,15 @@ class GameScene: SKScene {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        player?.removeAllActions()
+        if !movingToTrack {
+            player?.removeAllActions()
+        }
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        player?.removeAllActions()
+        if !movingToTrack {
+            player?.removeAllActions()
+        }
     }
     
     
@@ -78,5 +87,26 @@ class GameScene: SKScene {
         let moveAction = SKAction.moveBy(x: 0, y: amount, duration: 0.01)
         let repeatAction = SKAction.repeatForever(moveAction)
         player?.run(repeatAction)
+    }
+    
+    func moveToNextTrack() {
+        player?.removeAllActions()
+        
+        movingToTrack = true
+        
+        // calculate the next pos
+        guard let nextTrack = tracksArray?[currentTrack + 1].position else {
+            return
+        }
+        
+        if let player = self.player {
+            let moveAction = SKAction.moveTo(x: nextTrack.x, duration: 0.02)
+            player.run(moveAction, completion: {
+                self.movingToTrack = false
+            })
+            currentTrack += 1
+            
+            self.run(moveSound)
+        }
     }
 }
