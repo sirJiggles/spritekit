@@ -16,6 +16,7 @@
 		7FA2384B1F8A48400089A0CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FA2384A1F8A48400089A0CF /* Assets.xcassets */; };
 		7FA2384E1F8A48400089A0CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FA2384C1F8A48400089A0CF /* LaunchScreen.storyboard */; };
 		7FA238561F8A628D0089A0CF /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 7FA238551F8A48D40089A0CF /* Sounds */; };
+		7FA238581F8A65000089A0CF /* pulse.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7FA238571F8A65000089A0CF /* pulse.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,8 @@
 		7FA2384D1F8A48400089A0CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7FA2384F1F8A48400089A0CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7FA238551F8A48D40089A0CF /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
+		7FA238571F8A65000089A0CF /* pulse.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = pulse.sks; sourceTree = "<group>"; };
+		7FA238591F8A65640089A0CF /* fireworks.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = fireworks.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +68,8 @@
 				7FA2383D1F8A48400089A0CF /* AppDelegate.swift */,
 				7FA2383F1F8A48400089A0CF /* GameScene.sks */,
 				7FA238411F8A48400089A0CF /* Actions.sks */,
+				7FA238591F8A65640089A0CF /* fireworks.sks */,
+				7FA238571F8A65000089A0CF /* pulse.sks */,
 				7FA238431F8A48400089A0CF /* GameScene.swift */,
 				7FA238451F8A48400089A0CF /* GameViewController.swift */,
 				7FA238471F8A48400089A0CF /* Main.storyboard */,
@@ -135,6 +140,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7FA238581F8A65000089A0CF /* pulse.sks in Resources */,
 				7FA238561F8A628D0089A0CF /* Sounds in Resources */,
 				7FA238491F8A48400089A0CF /* Main.storyboard in Resources */,
 				7FA238401F8A48400089A0CF /* GameScene.sks in Resources */,
