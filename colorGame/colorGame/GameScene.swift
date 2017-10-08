@@ -9,7 +9,7 @@
 import SpriteKit
 import GameplayKit
 
-enum Enemies: {
+enum Enemies: Int {
     case small
     case medium
     case large
@@ -25,12 +25,35 @@ class GameScene: SKScene {
     // init this first so it is laoded early
     var moveSound = SKAction.playSoundFileNamed("Sounds/move.wav", waitForCompletion: false)
     
+    // various speeds
+    let trackVelocities = [180, 200, 250]
+    var directionArray = [Bool]()
+    // int for every track
+    var velocityArray = [Int]()
+    
     // MARK: lifecycle
     // like view did load in UIKit
     override func didMove(to view: SKView) {
         setUpTracks()
         createPlayer()
-        tracksArray?.first?.color = UIColor.green
+        
+        // add values to direction and velocty
+        if let numberOfTracks = tracksArray?.count {
+            for _ in 0 ... numberOfTracks {
+                // values from 0 - 2
+                let randomNumForVelocity = GKRandomSource.sharedRandom().nextInt(upperBound: 3)
+                velocityArray.append(trackVelocities[randomNumForVelocity])
+                directionArray.append(GKRandomSource.sharedRandom().nextBool())
+            }
+        }
+        
+        // call span enemies every two seconds
+        self.run(SKAction.repeatForever(SKAction.sequence([
+            SKAction.run({
+                self.spawnEnemies()
+            }),
+            SKAction.wait(forDuration: 2)
+        ])))
     }
     
     // MARK: Touch control
@@ -112,11 +135,35 @@ class GameScene: SKScene {
         
         guard let enemyPosition = tracksArray?[track].position else { return nil }
         
+        // depending on the direction we need to change y posiiton
+        let up = directionArray[track]
+        
         enemySprite.position.x = enemyPosition.x
-        // off the screen for now
-        enemySprite.position.y = 50
+        enemySprite.position.y = (up) ? -139 : self.size.height + 130
+        
+        enemySprite.physicsBody = SKPhysicsBody(edgeChainFrom: enemySprite.path!)
+        enemySprite.physicsBody?.velocity = (up) ? CGVector(dx: 0, dy: velocityArray[track]) : CGVector(dx: 0, dy: -velocityArray[track])
+        
+        enemySprite.name = "Enemy"
         
         return enemySprite
+    }
+    
+    func spawnEnemies() {
+        for i in 1 ... 7 {
+            let randomType = Enemies(rawValue: GKRandomSource.sharedRandom().nextInt(upperBound: 3))!
+            if let newEnemy = createEnemy(type: randomType, forTrack: i) {
+                self.addChild(newEnemy)
+            }
+        }
+        // look through all the node tree for children with this name
+        self.enumerateChildNodes(withName: "Enemy") { (node: SKNode, nil) in
+            
+            // if off the screeb remove
+            if node.position.y < -150 || node.position.y > self.size.height + 150 {
+                node.removeFromParent()
+            }
+        }
     }
     
     // MARK: moving function
