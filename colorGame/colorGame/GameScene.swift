@@ -15,7 +15,7 @@ enum Enemies: Int {
     case large
 }
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     var tracksArray: [SKSpriteNode]? = [SKSpriteNode]()
     var player: SKSpriteNode?
     var target: SKSpriteNode?
@@ -42,6 +42,9 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         setUpTracks()
         createPlayer()
+        createTarget()
+        
+        self.physicsWorld.contactDelegate = self
         
         // add values to direction and velocty
         if let numberOfTracks = tracksArray?.count {
@@ -90,6 +93,28 @@ class GameScene: SKScene {
         if !movingToTrack {
             player?.removeAllActions()
         }
+    }
+    
+    // MARK: Physics collisions
+    func didBegin(_ contact: SKPhysicsContact) {
+        var playerBody: SKPhysicsBody
+        var otherBody: SKPhysicsBody
+        
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
+            // as player is smallest cat bitmask, we know this is a player
+            playerBody = contact.bodyB
+            otherBody = contact.bodyB
+        } else {
+            playerBody = contact.bodyB
+            otherBody = contact.bodyA
+        }
+        
+        if playerBody.categoryBitMask == playerCategory && otherBody.categoryBitMask == enemyCategory {
+            print("enemy hit")
+        } else if (playerBody.categoryBitMask == playerCategory && otherBody.categoryBitMask == targetCategory) {
+            print("target hit")
+        }
+        
     }
     
     
@@ -143,6 +168,8 @@ class GameScene: SKScene {
             
             if let body = target.physicsBody {
                 body.categoryBitMask = targetCategory
+                // dont get effected by collisions
+                body.collisionBitMask = 0
             }
             
             self.target = target
