@@ -102,7 +102,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask {
             // as player is smallest cat bitmask, we know this is a player
-            playerBody = contact.bodyB
+            playerBody = contact.bodyA
             otherBody = contact.bodyB
         } else {
             playerBody = contact.bodyB
@@ -110,9 +110,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if playerBody.categoryBitMask == playerCategory && otherBody.categoryBitMask == enemyCategory {
-            print("enemy hit")
-        } else if (playerBody.categoryBitMask == playerCategory && otherBody.categoryBitMask == targetCategory) {
-            print("target hit")
+            movePlayerToStart()
+        } else if playerBody.categoryBitMask == playerCategory && otherBody.categoryBitMask == targetCategory {
+            // reach the next level
+            nextLevel(playerPhysBod: playerBody)
         }
         
     }
@@ -120,6 +121,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        
+        // check if the player is off the screen
+        if let player = self.player {
+            if player.position.y > self.size.height || player.position.y < 0 {
+                movePlayerToStart()
+            }
+        }
     }
     
 
