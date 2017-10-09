@@ -17,6 +17,8 @@
 		7FA2384E1F8A48400089A0CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FA2384C1F8A48400089A0CF /* LaunchScreen.storyboard */; };
 		7FA238561F8A628D0089A0CF /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 7FA238551F8A48D40089A0CF /* Sounds */; };
 		7FA238581F8A65000089A0CF /* pulse.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7FA238571F8A65000089A0CF /* pulse.sks */; };
+		7FFDC9381F8C229A004302DF /* GameElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FFDC9371F8C229A004302DF /* GameElements.swift */; };
+		7FFDC93A1F8C22EB004302DF /* GameFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FFDC9391F8C22EB004302DF /* GameFunctions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,8 @@
 		7FA238551F8A48D40089A0CF /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
 		7FA238571F8A65000089A0CF /* pulse.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = pulse.sks; sourceTree = "<group>"; };
 		7FA238591F8A65640089A0CF /* fireworks.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = fireworks.sks; sourceTree = "<group>"; };
+		7FFDC9371F8C229A004302DF /* GameElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameElements.swift; sourceTree = "<group>"; };
+		7FFDC9391F8C22EB004302DF /* GameFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameFunctions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +75,8 @@
 				7FA238591F8A65640089A0CF /* fireworks.sks */,
 				7FA238571F8A65000089A0CF /* pulse.sks */,
 				7FA238431F8A48400089A0CF /* GameScene.swift */,
+				7FFDC9371F8C229A004302DF /* GameElements.swift */,
+				7FFDC9391F8C22EB004302DF /* GameFunctions.swift */,
 				7FA238451F8A48400089A0CF /* GameViewController.swift */,
 				7FA238471F8A48400089A0CF /* Main.storyboard */,
 				7FA238551F8A48D40089A0CF /* Sounds */,
@@ -157,6 +163,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7FFDC93A1F8C22EB004302DF /* GameFunctions.swift in Sources */,
+				7FFDC9381F8C229A004302DF /* GameElements.swift in Sources */,
 				7FA238441F8A48400089A0CF /* GameScene.swift in Sources */,
 				7FA238461F8A48400089A0CF /* GameViewController.swift in Sources */,
 				7FA2383E1F8A48400089A0CF /* AppDelegate.swift in Sources */,
