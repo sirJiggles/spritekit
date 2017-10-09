@@ -18,6 +18,7 @@ enum Enemies: Int {
 class GameScene: SKScene {
     var tracksArray: [SKSpriteNode]? = [SKSpriteNode]()
     var player: SKSpriteNode?
+    var target: SKSpriteNode?
     
     var currentTrack = 0
     var movingToTrack = false
@@ -30,6 +31,11 @@ class GameScene: SKScene {
     var directionArray = [Bool]()
     // int for every track
     var velocityArray = [Int]()
+    
+    // category bitmasks for colllisions
+    let playerCategory: UInt32 = 0x1 << 1
+    let enemyCategory: UInt32 = 0x1 << 2
+    let targetCategory: UInt32 = 0x1 << 3
     
     // MARK: lifecycle
     // like view did load in UIKit
@@ -107,6 +113,19 @@ class GameScene: SKScene {
         // in the middle of the game scene height
         player?.position = CGPoint(x: playerPosition, y: self.size.height / 2)
         
+        player?.physicsBody = SKPhysicsBody(circleOfRadius: player!.size.width / 2)
+        
+        if let body = player?.physicsBody {
+            // simuation of air friction, would slow us down
+            body.linearDamping = 0
+            // set the cat bitmask
+            body.categoryBitMask = playerCategory
+            // turn off collisions that would influence other objects, as we dont want to move them
+            body.collisionBitMask = 0
+            // who do I want to know about contact with
+            body.contactTestBitMask = targetCategory | enemyCategory
+        }
+        
         // add it to the node tree
         self.addChild(player!)
         
@@ -114,6 +133,19 @@ class GameScene: SKScene {
             // add the pulse to the player
             player?.addChild(pulse)
             pulse.position = CGPoint(x: 0, y: 0)
+        }
+    }
+    
+    func createTarget() {
+        if let target = self.childNode(withName: "target") as? SKSpriteNode {
+            
+            target.physicsBody = SKPhysicsBody(circleOfRadius: target.size.width / 2)
+            
+            if let body = target.physicsBody {
+                body.categoryBitMask = targetCategory
+            }
+            
+            self.target = target
         }
     }
     
@@ -141,8 +173,13 @@ class GameScene: SKScene {
         enemySprite.position.x = enemyPosition.x
         enemySprite.position.y = (up) ? -139 : self.size.height + 130
         
-        enemySprite.physicsBody = SKPhysicsBody(edgeChainFrom: enemySprite.path!)
-        enemySprite.physicsBody?.velocity = (up) ? CGVector(dx: 0, dy: velocityArray[track]) : CGVector(dx: 0, dy: -velocityArray[track])
+        enemySprite.physicsBody = SKPhysicsBody(edgeLoopFrom: enemySprite.path!)
+        if let body =  enemySprite.physicsBody {
+            body.velocity = (up) ? CGVector(dx: 0, dy: velocityArray[track]) : CGVector(dx: 0, dy: -velocityArray[track])
+            
+            body.categoryBitMask = enemyCategory
+        }
+        
         
         enemySprite.name = "Enemy"
         
