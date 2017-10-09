@@ -89,6 +89,7 @@ extension GameScene {
     
     func nextLevel(playerPhysBod: SKPhysicsBody) {
         if let emmitter = SKEmitterNode(fileNamed: "fireworks") {
+            self.run(SKAction.playSoundFileNamed("Sounds/levelUp.wav", waitForCompletion: true))
             playerPhysBod.node?.addChild(emmitter)
             // wait then remove the emmiter
             self.run(SKAction.wait(forDuration: 0.5)) {

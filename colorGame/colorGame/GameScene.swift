@@ -25,6 +25,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // init this first so it is laoded early
     var moveSound = SKAction.playSoundFileNamed("Sounds/move.wav", waitForCompletion: false)
+    var bgNoise: SKAudioNode!
     
     // various speeds
     let trackVelocities = [180, 200, 250]
@@ -40,6 +41,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // MARK: lifecycle
     // like view did load in UIKit
     override func didMove(to view: SKView) {
+        // check for the bg noise
+        if let musicURL = Bundle.main.url(forResource: "Sounds/background", withExtension: "wav") {
+            bgNoise = SKAudioNode(url: musicURL)
+            addChild(bgNoise)
+        }
+        
         setUpTracks()
         createPlayer()
         createTarget()
@@ -110,6 +117,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if playerBody.categoryBitMask == playerCategory && otherBody.categoryBitMask == enemyCategory {
+            
+            self.run(SKAction.playSoundFileNamed("Sounds/fail.wav", waitForCompletion: true))
+            
             movePlayerToStart()
         } else if playerBody.categoryBitMask == playerCategory && otherBody.categoryBitMask == targetCategory {
             // reach the next level
