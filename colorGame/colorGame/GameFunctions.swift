@@ -40,6 +40,10 @@ extension GameScene {
         
         movingToTrack = true
         
+        if !(tracksArray?.indices.contains(currentTrack + 1))! {
+            return
+        }
+        
         // calculate the next pos
         guard let nextTrack = tracksArray?[currentTrack + 1].position else {
             return
