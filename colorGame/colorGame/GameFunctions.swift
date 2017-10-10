@@ -11,11 +11,36 @@ import GameplayKit
 
 extension GameScene {
     
+    func launchGameTimer() {
+        let timeAction = SKAction.repeatForever(SKAction.sequence([
+            SKAction.run({
+                self.remainingTime -= 1
+            }),
+            SKAction.wait(forDuration: 1)
+        ]))
+        timeLabel?.run(timeAction)
+    }
+    
     func spawnEnemies() {
+        var randomTrackNum = 0
+        let createPowerUp = GKRandomSource.sharedRandom().nextBool()
+        
+        if createPowerUp {
+            // as we have 7 tracks
+            randomTrackNum = GKRandomSource.sharedRandom().nextInt(upperBound: 6) + 1
+            
+            if let powerUpObj = self.createPowerUp(forTrack: randomTrackNum) {
+                self.addChild(powerUpObj)
+            }
+        }
+        
         for i in 1 ... 7 {
-            let randomType = Enemies(rawValue: GKRandomSource.sharedRandom().nextInt(upperBound: 3))!
-            if let newEnemy = createEnemy(type: randomType, forTrack: i) {
-                self.addChild(newEnemy)
+            // only make a enemy if not putting power up on this track
+            if randomTrackNum != i {
+                let randomType = Enemies(rawValue: GKRandomSource.sharedRandom().nextInt(upperBound: 3))!
+                if let newEnemy = createEnemy(type: randomType, forTrack: i) {
+                    self.addChild(newEnemy)
+                }
             }
         }
         // look through all the node tree for children with this name
@@ -89,6 +114,7 @@ extension GameScene {
     
     func nextLevel(playerPhysBod: SKPhysicsBody) {
         if let emmitter = SKEmitterNode(fileNamed: "fireworks") {
+            self.currentScore += 1
             self.run(SKAction.playSoundFileNamed("Sounds/levelUp.wav", waitForCompletion: true))
             playerPhysBod.node?.addChild(emmitter)
             // wait then remove the emmiter

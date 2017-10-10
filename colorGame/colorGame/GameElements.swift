@@ -11,6 +11,15 @@ import GameplayKit
 
 extension GameScene {
     
+    func createHud() {
+        timeLabel = self.childNode(withName: "time") as? SKLabelNode
+        scoreLabel = self.childNode(withName: "score") as? SKLabelNode
+        
+        // trigger computed props
+        remainingTime = 60
+        currentScore = 0
+    }
+    
     func setUpTracks() {
         for i in 0 ... 8 {
             if let track = self.childNode(withName: "\(i)") as? SKSpriteNode {
@@ -37,7 +46,7 @@ extension GameScene {
             // turn off collisions that would influence other objects, as we dont want to move them
             body.collisionBitMask = 0
             // who do I want to know about contact with
-            body.contactTestBitMask = targetCategory | enemyCategory
+            body.contactTestBitMask = targetCategory | enemyCategory | powerUpCategory
         }
         
         // add it to the node tree
@@ -100,6 +109,37 @@ extension GameScene {
         enemySprite.name = "Enemy"
         
         return enemySprite
+    }
+    
+    // create a power up on which track
+    func createPowerUp(forTrack track: Int) -> SKSpriteNode? {
+        let powerUpSprite = SKSpriteNode(imageNamed: "powerUp")
+        
+        // will get removed on collision ;)
+        powerUpSprite.name = "Enemy"
+        
+        powerUpSprite.physicsBody = SKPhysicsBody(circleOfRadius: powerUpSprite.size.width / 2)
+        
+        let up = directionArray[track]
+        let velocityY = (up) ? velocityArray[track] : -velocityArray[track]
+        
+        if let bod = powerUpSprite.physicsBody {
+            bod.linearDamping = 0
+            bod.categoryBitMask = powerUpCategory
+            // no need for this to collide with anything
+            bod.collisionBitMask = 0
+            bod.velocity = CGVector(dx: 0, dy: velocityY)
+        }
+        
+        guard let powerUpXPos = tracksArray?[track].position.x else {
+            return nil
+        }
+        
+        
+        powerUpSprite.position.x = powerUpXPos
+        powerUpSprite.position.y = (up) ? -130 : self.size.height + 130
+        
+        return powerUpSprite
     }
     
 }

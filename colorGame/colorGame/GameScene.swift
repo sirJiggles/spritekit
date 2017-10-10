@@ -20,6 +20,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var player: SKSpriteNode?
     var target: SKSpriteNode?
     
+    // MARK: HUD
+    var timeLabel: SKLabelNode?
+    var scoreLabel: SKLabelNode?
+    
+    // computed props for time and score
+    var currentScore: Int = 0 {
+        // when changed
+        didSet {
+            self.scoreLabel?.text = "Score: \(self.currentScore)"
+        }
+    }
+    var remainingTime: TimeInterval = 60 {
+        didSet {
+            self.timeLabel?.text = "Time: \(Int(self.remainingTime))"
+        }
+    }
+    
     var currentTrack = 0
     var movingToTrack = false
     
@@ -37,6 +54,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let playerCategory: UInt32 = 0x1 << 1
     let enemyCategory: UInt32 = 0x1 << 2
     let targetCategory: UInt32 = 0x1 << 3
+    let powerUpCategory: UInt32 = 0x1 << 4
     
     // MARK: lifecycle
     // like view did load in UIKit
@@ -47,6 +65,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             addChild(bgNoise)
         }
         
+        createHud()
+        launchGameTimer()
         setUpTracks()
         createPlayer()
         createTarget()
@@ -124,6 +144,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else if playerBody.categoryBitMask == playerCategory && otherBody.categoryBitMask == targetCategory {
             // reach the next level
             nextLevel(playerPhysBod: playerBody)
+        } else if playerBody.categoryBitMask == playerCategory && otherBody.categoryBitMask == powerUpCategory {
+            // play sound,
+            self.run(SKAction.playSoundFileNamed("Sounds/powerUp.wav", waitForCompletion: true))
+            // remove the power up
+            otherBody.node?.removeFromParent()
+            // increase the remaining time
+            remainingTime += 5
         }
         
     }
@@ -137,6 +164,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if player.position.y > self.size.height || player.position.y < 0 {
                 movePlayerToStart()
             }
+        }
+        
+        if remainingTime <= 5 {
+            timeLabel?.fontColor = UIColor.red
         }
     }
     
